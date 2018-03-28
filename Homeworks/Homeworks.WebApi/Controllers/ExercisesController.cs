@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Homeworks.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,9 +11,13 @@ namespace Homeworks.WebApi.Controllers
 {
     public class ExercisesController : ApiController
     {
-        public HttpResponseMessage Get([FromUri] Guid Id)
+        private ExercisesLogic exercises = new ExercisesLogic();
+
+        public IHttpActionResult Get([FromUri] Guid id)
         {
-            HttpRequestHeaders headers = this.Request.Headers;
+            return Ok(exercises.GetById(id));
+
+            /*HttpRequestHeaders headers = this.Request.Headers;
 
             string token = string.Empty;
 
@@ -35,7 +40,7 @@ namespace Homeworks.WebApi.Controllers
                 MaxAge = new TimeSpan(1, 0, 0, 0)
             };
 
-            return response;
+            return response;*/
         }
     }
 }

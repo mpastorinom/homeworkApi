@@ -5,13 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Homeworks.WebApi.Models;
+using Homeworks.Logic;
 
 namespace Homeworks.WebApi.Controllers
 {
     public class HomeworksController : ApiController
     {
-        //Lista temporal en memoria estática a modo ejemplo, se reemplazaría por una llamada a la lógica de negocio
-        private static List<Homework> homeworks = new List<Homework>();
+        private HomeworksLogic homeworks = new HomeworksLogic();
 
         // GET: api/Homeworks
         public IHttpActionResult Get()
@@ -22,7 +22,7 @@ namespace Homeworks.WebApi.Controllers
         // GET: api/Homeworks/5
         public IHttpActionResult Get([FromUri] Guid id)
         {
-            var homework = homeworks.Find(h => h.Id == id);
+            var homework = homeworks.GetById(id);
             if (homework == null)
             {
                 return NotFound();
@@ -33,8 +33,7 @@ namespace Homeworks.WebApi.Controllers
         // POST: api/Homeworks
         public IHttpActionResult Post([FromBody] Homework homework)
         {
-            homework.Id = Guid.NewGuid();
-            homeworks.Add(homework);
+            homeworks.Add(homework.toEntity());
             //DefaultApi hace referencia a la configuracion de App_Start/WebApiConfig.cs
             return CreatedAtRoute("DefaultApi", new { homework.Id }, homework);
         }
@@ -42,28 +41,22 @@ namespace Homeworks.WebApi.Controllers
         // PUT: api/Homeworks/5
         public IHttpActionResult Put([FromUri] Guid id, [FromBody] Homework updatedHomework)
         {
-            var homework = homeworks.Find(h => h.Id == id);
-            if (homework == null)
+            bool result = homeworks.Update(id, updatedHomework.toEntity());
+            if(!result)
             {
                 return NotFound();
             }
-            updatedHomework.Id = id;
-            homeworks.Remove(homework);
-            homeworks.Add(updatedHomework);
-
             return Ok();
         }
 
         // DELETE: api/Homeworks/5
         public IHttpActionResult Delete([FromUri] Guid id)
         {
-            var homework = homeworks.Find(h => h.Id == id);
-            if (homework == null)
+            bool result = homeworks.DeleteById(id);
+            if (!result)
             {
                 return NotFound();
             }
-            homeworks.Remove(homework);
-
             return Ok();
         }
 
@@ -71,32 +64,23 @@ namespace Homeworks.WebApi.Controllers
         [HttpGet]
         public IHttpActionResult Get([FromUri] Guid homeworkId, [FromUri] Guid exerciseId)
         {
-            var homework = homeworks.Find(h => h.Id == homeworkId);
-            if (homework == null)
-            {
-                return NotFound();
-            }
-            var exercise = homework.Exercises.Find(e => e.Id == exerciseId);
+            var exercise = homeworks.GetExercise(homeworkId, exerciseId);
             if (exercise == null)
             {
                 return NotFound();
             }
-
             return Ok(exercise);
-
         }
 
         [Route("api/homeworks/{id:guid}/exercises")]
         [HttpPost]
         public IHttpActionResult Post([FromUri] Guid id, [FromBody] Exercise exercise)
         {
-            exercise.Id = Guid.NewGuid();
-            var homework = homeworks.Find(h => h.Id == id);
-            if (homework == null)
+            bool result = homeworks.AddExercise(id, exercise.toEntity());
+            if (!result)
             {
                 return NotFound();
             }
-            homework.Exercises.Add(exercise);
             return CreatedAtRoute("GetExerciseById", new { homeworkId = id, exerciseId = exercise.Id }, exercise);
             //Otra forma es devolver el Get del controlador por defecto de exercises si es que existe
             //return CreatedAtRoute("DefaultApi", new { controller = "exercises", id = exercise.Id }, exercise);

@@ -138,6 +138,16 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Homeworks.Entities\Homeworks.Entities.csproj">
+      <Project>{1D47DD34-5EA7-47F2-8F94-AD19EF18A46A}</Project>
+      <Name>Homeworks.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Homeworks.Logic\Homeworks.Logic.csproj">
+      <Project>{4A9D9A7E-6C5E-43B0-B2DD-BB778C2A533D}</Project>
+      <Name>Homeworks.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
