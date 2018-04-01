@@ -1,0 +1,368 @@
+{
+	"info": {
+		"_postman_id": "dac043d6-cbca-4701-b60c-7ba536eb4c91",
+		"name": "Homeworks.Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TEST GET ALL HOMEWORKS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48fc716a-4fa3-48fd-a7e8-13def3e0c460",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/Homeworks",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Homeworks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST NEW HOMEWORK",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e725e18-657e-42cf-a503-d56bacdb73a9",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"timeStamp\", new Date());"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6a2766dd-8861-498f-a52c-e3623e5893b7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    if (pm.response.code == 201) {",
+							"        var jsonData = pm.response.json()",
+							"        pm.environment.set(\"homeworkId\", jsonData.Id)",
+							"    } else {",
+							"        pm.environment.set(\"homeworkId\", null)",
+							"    }",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Description\": \"Un-Post\",\n\t\"DueDate\": \"{{timeStamp}}\",\n\t\"Score\": 10\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/Homeworks",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Homeworks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST GET HOMEWORK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "24dca096-b66e-439f-a1dc-0c90fde4b31d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"They're the same homework\", function () {",
+							"    var jsonData = pm.response.json()",
+							"    pm.expect(jsonData.Id).to.eql(pm.environment.get(\"homeworkId\"))",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/Homeworks/{{homeworkId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Homeworks",
+						"{{homeworkId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST UPDATE HOMEWORK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f8dfa8f5-883b-4e2b-87eb-c96acb3d02bd",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Updated successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Description\": \"Un-Post Modificado\",\n\t\"DueDate\": \"{{timeStamp}}\",\n\t\"Score\": 100\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/Homeworks/{{homeworkId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Homeworks",
+						"{{homeworkId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST GET HOMEWORK AFTER UPDATE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f5533fc5-aace-49ab-9b18-0308ad57fa09",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Data correctly updated\", function () {",
+							"    var jsonData = pm.response.json()",
+							"    pm.expect(jsonData.Id).to.eql(pm.environment.get(\"homeworkId\"))",
+							"    pm.expect(jsonData.Description).to.eql(\"Un-Post Modificado\")",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/Homeworks/{{homeworkId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Homeworks",
+						"{{homeworkId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST NEW EXERCISE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b5091009-1388-4fd1-8a9f-2bf8ebbcf58a",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Exercise created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    if (pm.response.code == 201) {",
+							"        var jsonData = pm.response.json()",
+							"        pm.environment.set(\"exerciseId\", jsonData.Id)",
+							"    } else {",
+							"        pm.environment.set(\"exerciseId\", null)",
+							"    }",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Problem\": \"1 + 1 = ?\",\n\t\"Score\": 0\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/homeworks/{{homeworkId}}/exercises",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"homeworks",
+						"{{homeworkId}}",
+						"exercises"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST GET NEW EXERCISE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "be7113c1-916e-4add-8c0f-5ce30ad048fc",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"They're the same exercise\", function () {",
+							"    var jsonData = pm.response.json()",
+							"    pm.expect(jsonData.Id).to.eql(pm.environment.get(\"exerciseId\"))",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/homeworks/{{homeworkId}}/exercises/{{exerciseId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"homeworks",
+						"{{homeworkId}}",
+						"exercises",
+						"{{exerciseId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST GET EXERCISE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fb61b56a-7356-40e3-8a50-e91f82a567fe",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Get exercise\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/exercises/{{exerciseId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"exercises",
+						"{{exerciseId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST DELETE HOMEWORK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6810c46f-a3ab-4ab5-ad9b-66a76e79d927",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Homework deleted\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/homeworks/{{homeworkId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"homeworks",
+						"{{homeworkId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

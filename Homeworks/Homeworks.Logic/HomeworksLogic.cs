@@ -23,10 +23,10 @@ namespace Homeworks.Logic
             return homeworks.GetById(id);
         }
 
-        public void Add(Homework homework)
+        public Homework Add(Homework homework)
         {
             homework.Id = Guid.NewGuid();
-            homeworks.Add(homework);
+            return homeworks.Add(homework);
         }
 
         public bool DeleteById(Guid id)
@@ -39,7 +39,7 @@ namespace Homeworks.Logic
             return homeworks.Update(id, updatedHomework);
         }
 
-        public bool AddExercise(Guid homeworkId, Exercise exercise)
+        public Exercise AddExercise(Guid homeworkId, Exercise exercise)
         {
             exercise.Id = Guid.NewGuid();
             return exercises.Add(homeworkId, exercise);

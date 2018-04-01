@@ -11,6 +11,7 @@ namespace Homeworks.Entities
     {
         public Guid Id { get; set; }
         public string Description { get; set; }
+        [Column(TypeName = "datetime2")]
         public DateTime DueDate { get; set; }
         [NotMapped]
         public int Score {

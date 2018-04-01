@@ -16,7 +16,7 @@ namespace Homeworks.WebApi.Controllers
         // GET: api/Homeworks
         public IHttpActionResult Get()
         {
-            return Ok(homeworks);
+            return Ok(homeworks.GetAll());
         }
 
         // GET: api/Homeworks/5
@@ -33,9 +33,9 @@ namespace Homeworks.WebApi.Controllers
         // POST: api/Homeworks
         public IHttpActionResult Post([FromBody] Homework homework)
         {
-            homeworks.Add(homework.toEntity());
+            var newHomework = homeworks.Add(homework.toEntity());
             //DefaultApi hace referencia a la configuracion de App_Start/WebApiConfig.cs
-            return CreatedAtRoute("DefaultApi", new { homework.Id }, homework);
+            return CreatedAtRoute("DefaultApi", new { newHomework.Id }, newHomework);
         }
 
         // PUT: api/Homeworks/5
@@ -76,12 +76,12 @@ namespace Homeworks.WebApi.Controllers
         [HttpPost]
         public IHttpActionResult Post([FromUri] Guid id, [FromBody] Exercise exercise)
         {
-            bool result = homeworks.AddExercise(id, exercise.toEntity());
-            if (!result)
+            var new_exercise = homeworks.AddExercise(id, exercise.toEntity());
+            if (new_exercise == null)
             {
                 return NotFound();
             }
-            return CreatedAtRoute("GetExerciseById", new { homeworkId = id, exerciseId = exercise.Id }, exercise);
+            return CreatedAtRoute("GetExerciseById", new { homeworkId = id, exerciseId = new_exercise.Id }, new_exercise);
             //Otra forma es devolver el Get del controlador por defecto de exercises si es que existe
             //return CreatedAtRoute("DefaultApi", new { controller = "exercises", id = exercise.Id }, exercise);
         }

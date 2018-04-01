@@ -16,7 +16,7 @@ namespace Homeworks.DataAccess
                 return context.Exercises.FirstOrDefault(p => p.Id == id);
             }
         }
-        public bool Add(Guid homeworkId, Exercise exercise)
+        public Exercise Add(Guid homeworkId, Exercise exercise)
         {
             using (var context = new HomeworksContext())
             {
@@ -25,10 +25,10 @@ namespace Homeworks.DataAccess
                 {
                     homework.Exercises.Add(exercise);
                     context.SaveChanges();
-                    return true;
+                    return exercise;
                 } else
                 {
-                    return false;
+                    return null;
                 }
              }
         }

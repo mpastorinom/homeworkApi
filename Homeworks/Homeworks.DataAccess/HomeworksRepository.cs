@@ -14,7 +14,7 @@ namespace Homeworks.DataAccess
         {
             using (var context = new HomeworksContext())
             {
-                return context.Homeworks.Include("Exercises");
+                return context.Homeworks.Include("Exercises").ToList();
             }
         }
 
@@ -26,20 +26,21 @@ namespace Homeworks.DataAccess
             }
         }
 
-        public void Add(Homework homework)
+        public Homework Add(Homework homework)
         {
             using (var context = new HomeworksContext())
             {
-                context.Homeworks.Add(homework);
+                homework = context.Homeworks.Add(homework);
                 context.SaveChanges();
             }
+            return homework;
         }
 
         public bool DeleteById(Guid id)
         {
             using (var context = new HomeworksContext())
             {
-                Homework homework = context.Homeworks.FirstOrDefault(p => p.Id == id);
+                Homework homework = context.Homeworks.Include("Exercises").FirstOrDefault(p => p.Id == id);
                 if (homework == null)
                 {
                     return false;
