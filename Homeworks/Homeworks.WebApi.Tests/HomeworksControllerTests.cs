@@ -216,6 +216,58 @@ namespace Homeworks.WebApi.Tests
             Assert.IsInstanceOfType(obtainedResult, typeof(UnauthorizedResult));
         }
 
+        [TestMethod]
+        public void GetExerciseOkTest()
+        {
+            var fakeHomeworkGuid = Guid.NewGuid();
+            var expectedExercise = GetFakeExercise();
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.GetExercise(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                .Returns(Exercise.ToEntity(expectedExercise));
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Get(fakeHomeworkGuid, expectedExercise.Id);
+            var contentResult = obtainedResult as OkNegotiatedContentResult<Exercise>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(expectedExercise, contentResult.Content);
+        }
+
+        [TestMethod]
+        public void CreateExerciseOkTest()
+        {
+            var fakeHomeworkGuid = Guid.NewGuid();
+            var fakeExercise = GetFakeExercise();
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.AddExercise(It.IsAny<Guid>(), It.IsAny<Entities.Exercise>()))
+                .Returns(Exercise.ToEntity(fakeExercise));
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Post(fakeHomeworkGuid, fakeExercise);
+            var createdResult = obtainedResult as CreatedAtRouteNegotiatedContentResult<Exercise>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual("GetExerciseById", createdResult.RouteName);
+            Assert.AreEqual(fakeHomeworkGuid, createdResult.RouteValues["homeworkId"]);
+            Assert.AreEqual(fakeExercise.Id, createdResult.RouteValues["exerciseId"]);
+            Assert.AreEqual(fakeExercise, createdResult.Content);
+        }
+
+        private Exercise GetFakeExercise()
+        {
+            return new Exercise
+            {
+                Id = Guid.NewGuid(),
+                Problem = "1 + 1 = ?",
+                Score = 2
+            };
+        }
+
         private Homework GetFakeHomework()
         {
             return new Homework

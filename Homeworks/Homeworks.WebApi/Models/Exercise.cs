@@ -29,5 +29,13 @@ namespace Homeworks.WebApi.Models
             Score = entity.Score;
             return this;
         }
+
+        public override bool Equals(object obj)
+        {
+            var aExercise = obj as Exercise;
+            if (aExercise == null)
+                return false;
+            return this.Id == aExercise.Id;
+        }
     }
 }
