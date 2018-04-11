@@ -7,7 +7,17 @@ namespace Homeworks.WebApi.Controllers
 {
     public class HomeworksController : ApiController
     {
-        private HomeworksLogic homeworks = new HomeworksLogic();
+        private IHomeworksLogic homeworks;
+
+        public HomeworksController()
+        {
+            homeworks = new HomeworksLogic();
+        }
+
+        public HomeworksController(IHomeworksLogic aHomeworksLogic)
+        {
+            homeworks = aHomeworksLogic;
+        }
 
         // GET: api/Homeworks
         public IHttpActionResult Get()

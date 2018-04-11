@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ExercisesLogic.cs" />
     <Compile Include="HomeworksLogic.cs" />
+    <Compile Include="IHomeworksLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

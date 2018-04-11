@@ -38,5 +38,18 @@ namespace Homeworks.WebApi.Models
             Exercises = entity.Exercises.ConvertAll(m => new Exercise(m));
             return this;
         }
+
+        public override bool Equals(object obj)
+        {
+            var aHomework = obj as Homework;
+            if (aHomework == null)
+                return false;
+            return this.Id == aHomework.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

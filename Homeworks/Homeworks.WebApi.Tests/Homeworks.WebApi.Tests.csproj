@@ -81,6 +81,20 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Homeworks.Entities\Homeworks.Entities.csproj">
+      <Project>{1D47DD34-5EA7-47F2-8F94-AD19EF18A46A}</Project>
+      <Name>Homeworks.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Homeworks.Logic\Homeworks.Logic.csproj">
+      <Project>{4A9D9A7E-6C5E-43B0-B2DD-BB778C2A533D}</Project>
+      <Name>Homeworks.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Homeworks.WebApi\Homeworks.WebApi.csproj">
+      <Project>{811B4B1D-C83B-4BB8-AA58-48D4231FD595}</Project>
+      <Name>Homeworks.WebApi</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

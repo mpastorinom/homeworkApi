@@ -16,6 +16,11 @@ namespace Homeworks.WebApi.Models
             return new M().SetModel(entity);
         }
 
+        public static IEnumerable<E> ToEntity(IEnumerable<M> models)
+        {
+            return models.Select(x => x.ToEntity());
+        }
+
         public abstract E ToEntity();
 
         protected abstract M SetModel(E entity);
