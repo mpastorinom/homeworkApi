@@ -99,6 +99,22 @@ namespace Homeworks.WebApi.Controllers
             //Otra forma es devolver el Get del controlador por defecto de exercises si es que existe
             //return CreatedAtRoute("DefaultApi", new { controller = "exercises", id = exercise.Id }, exercise);
         }
+
+        [HttpGet]
+        //TAREAS SOLO PARA ADMINISTRADORES
+        public IHttpActionResult GetAllRestrictedHomeworks()
+        {
+            var authorization = Request.Headers.Authorization;
+            var key = authorization == null ? string.Empty : authorization.Scheme;
+            if (key == "admin")
+            {
+                return Ok(Homework.ToModel(homeworks.GetAll()));
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
     }
 }
 

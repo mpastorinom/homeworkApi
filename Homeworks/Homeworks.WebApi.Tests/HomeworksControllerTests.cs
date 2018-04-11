@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Homeworks.Logic;
@@ -173,6 +174,46 @@ namespace Homeworks.WebApi.Tests
 
             mockHomeworksLogic.VerifyAll();
             Assert.IsInstanceOfType(obtainedResult, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public void GetAllRestrictedHomeworksOkTest()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "DefaultUri");
+            request.Headers.Add("Authorization", "admin");
+
+            var expectedHomeworks = GetFakeHomeworks();
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.GetAll())
+                .Returns(Homework.ToEntity(expectedHomeworks));
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+            controller.Request = request;
+
+            IHttpActionResult obtainedResult = controller.GetAllRestrictedHomeworks();
+            var contentResult = obtainedResult as OkNegotiatedContentResult<IEnumerable<Homework>>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.IsTrue(expectedHomeworks.SequenceEqual(contentResult.Content));
+        }
+
+        [TestMethod]
+        public void GetAllRestrictedHomeworksErrorUnauthorizedTest()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "DefaultUri");
+
+            var expectedHomeworks = GetFakeHomeworks();
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+            controller.Request = request;
+
+            IHttpActionResult obtainedResult = controller.GetAllRestrictedHomeworks();
+            var contentResult = obtainedResult as OkNegotiatedContentResult<IEnumerable<Homework>>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsInstanceOfType(obtainedResult, typeof(UnauthorizedResult));
         }
 
         private Homework GetFakeHomework()
