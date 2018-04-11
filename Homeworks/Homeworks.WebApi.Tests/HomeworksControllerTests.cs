@@ -70,6 +70,43 @@ namespace Homeworks.WebApi.Tests
             Assert.IsInstanceOfType(obtainedResult, typeof(NotFoundResult));
         }
 
+        [TestMethod]
+        public void CreateNewHomeworkTest()
+        {
+            Homework fakeHomework = GetFakeHomework();
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.Add(It.IsAny<Entities.Homework>()))
+                .Returns(Homework.ToEntity(fakeHomework));
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Post(fakeHomework);
+            var createdResult = obtainedResult as CreatedAtRouteNegotiatedContentResult<Homework>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual("DefaultApi", createdResult.RouteName);
+            Assert.AreEqual(fakeHomework.Id, createdResult.RouteValues["id"]);
+            Assert.AreEqual(fakeHomework, createdResult.Content);
+        }
+
+        [TestMethod]
+        public void CreateNullHomeworkTest()
+        {
+            Homework fakeHomework = null;
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.Add(It.IsAny<Entities.Homework>()))
+                .Throws(new ArgumentNullException());
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Post(fakeHomework);
+            var createdResult = obtainedResult as CreatedAtRouteNegotiatedContentResult<Homework>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsInstanceOfType(obtainedResult, typeof(BadRequestErrorMessageResult));
+        }
+
         private Homework GetFakeHomework()
         {
             return new Homework
