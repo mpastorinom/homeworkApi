@@ -107,6 +107,74 @@ namespace Homeworks.WebApi.Tests
             Assert.IsInstanceOfType(obtainedResult, typeof(BadRequestErrorMessageResult));
         }
 
+        [TestMethod]
+        public void UpdateExistingHomeworkOkTest()
+        {
+            Homework fakeHomework = GetFakeHomework();
+            var expectedResult = true;
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.Update(It.IsAny<Guid>(), It.IsAny<Entities.Homework>()))
+                .Returns(expectedResult);
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Put(Guid.NewGuid(), fakeHomework);
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsInstanceOfType(obtainedResult, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public void UpdateHomeworkErrorUnexistingTest()
+        {
+            Homework fakeHomework = GetFakeHomework();
+            var expectedResult = false;
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.Update(It.IsAny<Guid>(), It.IsAny<Entities.Homework>()))
+                .Returns(expectedResult);
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Put(Guid.NewGuid(), fakeHomework);
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsInstanceOfType(obtainedResult, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public void DeleteHomeworkOkTest()
+        {
+            Guid fakeGuid = Guid.NewGuid();
+            var expectedResult = true;
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.DeleteById(It.IsAny<Guid>()))
+                .Returns(expectedResult);
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Delete(fakeGuid);
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsInstanceOfType(obtainedResult, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public void DeleteHomeworkErrorNotFoundTest()
+        {
+            Guid fakeGuid = Guid.NewGuid();
+            var expectedResult = false;
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.DeleteById(It.IsAny<Guid>()))
+                .Returns(expectedResult);
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Delete(fakeGuid);
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsInstanceOfType(obtainedResult, typeof(NotFoundResult));
+        }
+
         private Homework GetFakeHomework()
         {
             return new Homework
