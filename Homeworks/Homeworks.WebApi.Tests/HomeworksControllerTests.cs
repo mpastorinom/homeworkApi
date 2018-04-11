@@ -19,7 +19,9 @@ namespace Homeworks.WebApi.Tests
         {
             var expectedHomeworks = GetFakeHomeworks();
             var mockHomeworksLogic = new Mock<IHomeworksLogic>();
-            mockHomeworksLogic.Setup(wl => wl.GetAll()).Returns(Homework.ToEntity(expectedHomeworks));
+            mockHomeworksLogic
+                .Setup(wl => wl.GetAll())
+                .Returns(Homework.ToEntity(expectedHomeworks));
             var controller = new HomeworksController(mockHomeworksLogic.Object);
 
             IHttpActionResult obtainedResult = controller.Get();
@@ -30,6 +32,52 @@ namespace Homeworks.WebApi.Tests
             Assert.IsNotNull(contentResult.Content);
             Assert.IsTrue(expectedHomeworks.SequenceEqual(contentResult.Content));
             //CollectionAssert.AreEqual(expectedHomeworks.ToList(), contentResult.Content.ToList());
+        }
+
+        [TestMethod]
+        public void GetHomeworkOkTest()
+        {
+            var expectedHomework = GetFakeHomework();
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.GetById(It.IsAny<Guid>()))
+                .Returns(Homework.ToEntity(expectedHomework));
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Get(expectedHomework.Id);
+            var contentResult = obtainedResult as OkNegotiatedContentResult<Homework>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(expectedHomework, contentResult.Content);
+        }
+
+        [TestMethod]
+        public void GetHomeworkErrorNotFoundTest()
+        {
+            Homework expectedHomework = null;
+            var mockHomeworksLogic = new Mock<IHomeworksLogic>();
+            mockHomeworksLogic
+                .Setup(wl => wl.GetById(It.IsAny<Guid>()))
+                .Returns(Homework.ToEntity(expectedHomework));
+            var controller = new HomeworksController(mockHomeworksLogic.Object);
+
+            IHttpActionResult obtainedResult = controller.Get(Guid.NewGuid());
+            var contentResult = obtainedResult as OkNegotiatedContentResult<Homework>;
+
+            mockHomeworksLogic.VerifyAll();
+            Assert.IsInstanceOfType(obtainedResult, typeof(NotFoundResult));
+        }
+
+        private Homework GetFakeHomework()
+        {
+            return new Homework
+            {
+                Id = Guid.NewGuid(),
+                Description = "Homework",
+                DueDate = DateTime.Now.AddDays(1)
+            };
         }
 
         private IEnumerable<Homework> GetFakeHomeworks()
