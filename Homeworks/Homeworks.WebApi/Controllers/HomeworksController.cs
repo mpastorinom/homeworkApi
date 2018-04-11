@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Homeworks.WebApi.Models;
 using Homeworks.Logic;
@@ -16,7 +12,7 @@ namespace Homeworks.WebApi.Controllers
         // GET: api/Homeworks
         public IHttpActionResult Get()
         {
-            return Ok(homeworks.GetAll());
+            return Ok(Homework.ToModel(homeworks.GetAll()));
         }
 
         // GET: api/Homeworks/5
@@ -27,21 +23,22 @@ namespace Homeworks.WebApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(homework);
+            return Ok(Homework.ToModel(homework));
         }
 
         // POST: api/Homeworks
         public IHttpActionResult Post([FromBody] Homework homework)
         {
-            var newHomework = homeworks.Add(homework.toEntity());
+            var newHomework = homeworks.Add(homework.ToEntity());
+            var modelNewHomework = Homework.ToModel(newHomework);
             //DefaultApi hace referencia a la configuracion de App_Start/WebApiConfig.cs
-            return CreatedAtRoute("DefaultApi", new { newHomework.Id }, newHomework);
+            return CreatedAtRoute("DefaultApi", new { modelNewHomework.Id }, modelNewHomework);
         }
 
         // PUT: api/Homeworks/5
         public IHttpActionResult Put([FromUri] Guid id, [FromBody] Homework updatedHomework)
         {
-            bool result = homeworks.Update(id, updatedHomework.toEntity());
+            bool result = homeworks.Update(id, updatedHomework.ToEntity());
             if(!result)
             {
                 return NotFound();
@@ -69,19 +66,20 @@ namespace Homeworks.WebApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(exercise);
+            return Ok(Exercise.ToModel(exercise));
         }
 
         [Route("api/homeworks/{id:guid}/exercises")]
         [HttpPost]
         public IHttpActionResult Post([FromUri] Guid id, [FromBody] Exercise exercise)
         {
-            var new_exercise = homeworks.AddExercise(id, exercise.toEntity());
-            if (new_exercise == null)
+            var newExercise = homeworks.AddExercise(id, exercise.ToEntity());
+            if (newExercise == null)
             {
                 return NotFound();
             }
-            return CreatedAtRoute("GetExerciseById", new { homeworkId = id, exerciseId = new_exercise.Id }, new_exercise);
+            var modelNewExercise = Exercise.ToModel(newExercise);
+            return CreatedAtRoute("GetExerciseById", new { homeworkId = id, exerciseId = modelNewExercise.Id }, modelNewExercise);
             //Otra forma es devolver el Get del controlador por defecto de exercises si es que existe
             //return CreatedAtRoute("DefaultApi", new { controller = "exercises", id = exercise.Id }, exercise);
         }
