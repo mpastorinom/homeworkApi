@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Homeworks.Logic
 {
-    public class HomeworksLogic
+    public class HomeworksLogic : IHomeworksLogic
     {
         private HomeworksRepository homeworks = new HomeworksRepository();
         private ExercisesRepository exercises = new ExercisesRepository();
