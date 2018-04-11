@@ -7,7 +7,17 @@ namespace Homeworks.WebApi.Controllers
 {
     public class HomeworksController : ApiController
     {
-        private HomeworksLogic homeworks = new HomeworksLogic();
+        private IHomeworksLogic homeworks;
+
+        public HomeworksController()
+        {
+            homeworks = new HomeworksLogic();
+        }
+
+        public HomeworksController(IHomeworksLogic aHomeworksLogic)
+        {
+            homeworks = aHomeworksLogic;
+        }
 
         // GET: api/Homeworks
         public IHttpActionResult Get()
@@ -29,10 +39,16 @@ namespace Homeworks.WebApi.Controllers
         // POST: api/Homeworks
         public IHttpActionResult Post([FromBody] Homework homework)
         {
-            var newHomework = homeworks.Add(homework.ToEntity());
-            var modelNewHomework = Homework.ToModel(newHomework);
-            //DefaultApi hace referencia a la configuracion de App_Start/WebApiConfig.cs
-            return CreatedAtRoute("DefaultApi", new { modelNewHomework.Id }, modelNewHomework);
+            try
+            {
+                var newHomework = homeworks.Add(Homework.ToEntity(homework));
+                var modelNewHomework = Homework.ToModel(newHomework);
+                //DefaultApi hace referencia a la configuracion de App_Start/WebApiConfig.cs
+                return CreatedAtRoute("DefaultApi", new { modelNewHomework.Id }, modelNewHomework);
+            } catch (ArgumentNullException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // PUT: api/Homeworks/5

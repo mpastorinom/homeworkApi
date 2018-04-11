@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homeworks.WebApi", "Homeworks.WebApi\Homeworks.WebApi.csproj", "{811B4B1D-C83B-4BB8-AA58-48D4231FD595}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homeworks.Entities", "Homeworks.Entities\Homeworks.Entities.csproj", "{1D47DD34-5EA7-47F2-8F94-AD19EF18A46A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homeworks.Logic", "Homeworks.Logic\Homeworks.Logic.csproj", "{4A9D9A7E-6C5E-43B0-B2DD-BB778C2A533D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homeworks.WebApi.Tests", "Homeworks.WebApi.Tests\Homeworks.WebApi.Tests.csproj", "{83D1751D-F842-4DA4-9409-315729DF9528}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +35,15 @@ Global
 		{4A9D9A7E-6C5E-43B0-B2DD-BB778C2A533D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A9D9A7E-6C5E-43B0-B2DD-BB778C2A533D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A9D9A7E-6C5E-43B0-B2DD-BB778C2A533D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D1751D-F842-4DA4-9409-315729DF9528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D1751D-F842-4DA4-9409-315729DF9528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D1751D-F842-4DA4-9409-315729DF9528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D1751D-F842-4DA4-9409-315729DF9528}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C0B93C7-0E21-4AE9-A9CC-94320532F813}
 	EndGlobalSection
 EndGlobal
