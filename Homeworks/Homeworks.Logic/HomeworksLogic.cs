@@ -2,13 +2,10 @@
 using Homeworks.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Homeworks.Logic
 {
-    public class HomeworksLogic
+    public class HomeworksLogic : IHomeworksLogic
     {
         private HomeworksRepository homeworks = new HomeworksRepository();
         private ExercisesRepository exercises = new ExercisesRepository();
