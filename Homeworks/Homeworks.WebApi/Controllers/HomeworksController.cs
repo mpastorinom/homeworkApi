@@ -125,24 +125,18 @@ namespace Homeworks.WebApi.Controllers
         public HttpResponseMessage GetFormatted([FromUri] FormatModel model)
         {
             var response = new HttpResponseMessage();
-            if(ModelState.IsValid)
+            var accept = Request.Headers.Accept;
+            var key = accept == null ? string.Empty : accept.ToString();
+            if (key.Contains("text/html"))
             {
-                var accept = Request.Headers.Accept;
-                var key = accept == null ? string.Empty : accept.ToString();
-                if (key.Contains("text/html"))
-                {
-                    response.Content = new StringContent(GetHTML(model));
-                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
-                    response.StatusCode = HttpStatusCode.OK;
+                response.Content = new StringContent(GetHTML(model));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+                response.StatusCode = HttpStatusCode.OK;
           
-                }
-                else
-                {
-                    response.StatusCode = HttpStatusCode.NotAcceptable;
-                }
-            } else
+            }
+            else
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
+                response.StatusCode = HttpStatusCode.NotAcceptable;
             }
             return response;
         }
