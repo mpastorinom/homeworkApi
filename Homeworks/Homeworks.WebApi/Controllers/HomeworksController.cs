@@ -48,7 +48,8 @@ namespace Homeworks.WebApi.Controllers
                 var modelNewHomework = Homework.ToModel(newHomework);
                 //DefaultApi hace referencia a la configuracion de App_Start/WebApiConfig.cs
                 return CreatedAtRoute("DefaultApi", new { modelNewHomework.Id }, modelNewHomework);
-            } catch (ArgumentNullException e)
+            }
+            catch (ArgumentNullException e)
             {
                 return BadRequest(e.Message);
             }
@@ -58,7 +59,7 @@ namespace Homeworks.WebApi.Controllers
         public IHttpActionResult Put([FromUri] Guid id, [FromBody] Homework updatedHomework)
         {
             bool result = homeworks.Update(id, updatedHomework.ToEntity());
-            if(!result)
+            if (!result)
             {
                 return NotFound();
             }
@@ -121,29 +122,30 @@ namespace Homeworks.WebApi.Controllers
 
         [HttpGet]
         [Route("api/homeworks/formatted")]
-        public HttpResponseMessage GetFormatted()
+        public HttpResponseMessage GetFormatted(string text, string color, string background, int fontSize)
         {
             var response = new HttpResponseMessage();
             var accept = Request.Headers.Accept;
             var key = accept == null ? string.Empty : accept.ToString();
             if (key.Contains("text/html"))
             {
-                response.Content = new StringContent(GetHTML());
+                response.Content = new StringContent(GetHTML(text, color, background, fontSize));
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
                 response.StatusCode = HttpStatusCode.OK;
                 return response;
-            } else
+            }
+            else
             {
                 response.StatusCode = HttpStatusCode.NotAcceptable;
                 return response;
             }
         }
 
-        private string GetHTML()
+        private string GetHTML(string text, string color, string background, int fontSize)
         {
             string html = "<html><body>{0}</body></html>";
-            string body = "<div style='color: red; background-color: green'>This is some awesome html! </div>";
-            return string.Format(html, body);
+            string body = "<div style='color:{0}; background-color:{1}; font-size:{2}'>{3}</div>";
+            return string.Format(html, string.Format(body, color, background, fontSize, text));
         }
 
     }
