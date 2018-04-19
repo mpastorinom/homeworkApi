@@ -124,11 +124,12 @@
     <Compile Include="Controllers\ExercisesController.cs" />
     <Compile Include="Controllers\HomeworksController.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
+    <Compile Include="Binders\FormatModelBinder.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Exercise.cs" />
-    <Compile Include="Models\FormatModel.cs" />
+    <Compile Include="Models\Format.cs" />
     <Compile Include="Models\Homework.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
