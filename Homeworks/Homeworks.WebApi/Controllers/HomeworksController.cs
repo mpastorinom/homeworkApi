@@ -2,6 +2,9 @@
 using System.Web.Http;
 using Homeworks.WebApi.Models;
 using Homeworks.Logic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net;
 
 namespace Homeworks.WebApi.Controllers
 {
@@ -115,6 +118,34 @@ namespace Homeworks.WebApi.Controllers
                 return Unauthorized();
             }
         }
+
+        [HttpGet]
+        [Route("api/homeworks/formatted")]
+        public HttpResponseMessage GetFormatted()
+        {
+            var response = new HttpResponseMessage();
+            var accept = Request.Headers.Accept;
+            var key = accept == null ? string.Empty : accept.ToString();
+            if (key.Contains("text/html"))
+            {
+                response.Content = new StringContent(GetHTML());
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+                response.StatusCode = HttpStatusCode.OK;
+                return response;
+            } else
+            {
+                response.StatusCode = HttpStatusCode.NotAcceptable;
+                return response;
+            }
+        }
+
+        private string GetHTML()
+        {
+            string html = "<html><body>{0}</body></html>";
+            string body = "<div style='color: red; background-color: green'>This is some awesome html! </div>";
+            return string.Format(html, body);
+        }
+
     }
 }
 
