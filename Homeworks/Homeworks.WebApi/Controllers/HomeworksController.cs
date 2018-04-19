@@ -122,30 +122,36 @@ namespace Homeworks.WebApi.Controllers
 
         [HttpGet]
         [Route("api/homeworks/formatted")]
-        public HttpResponseMessage GetFormatted(string text, string color, string background, int fontSize)
+        public HttpResponseMessage GetFormatted([FromUri] FormatModel model)
         {
             var response = new HttpResponseMessage();
-            var accept = Request.Headers.Accept;
-            var key = accept == null ? string.Empty : accept.ToString();
-            if (key.Contains("text/html"))
+            if(ModelState.IsValid)
             {
-                response.Content = new StringContent(GetHTML(text, color, background, fontSize));
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
-                response.StatusCode = HttpStatusCode.OK;
-                return response;
-            }
-            else
+                var accept = Request.Headers.Accept;
+                var key = accept == null ? string.Empty : accept.ToString();
+                if (key.Contains("text/html"))
+                {
+                    response.Content = new StringContent(GetHTML(model));
+                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+                    response.StatusCode = HttpStatusCode.OK;
+          
+                }
+                else
+                {
+                    response.StatusCode = HttpStatusCode.NotAcceptable;
+                }
+            } else
             {
-                response.StatusCode = HttpStatusCode.NotAcceptable;
-                return response;
+                response.StatusCode = HttpStatusCode.BadRequest;
             }
+            return response;
         }
 
-        private string GetHTML(string text, string color, string background, int fontSize)
+        private string GetHTML(FormatModel model)
         {
             string html = "<html><body>{0}</body></html>";
             string body = "<div style='color:{0}; background-color:{1}; font-size:{2}'>{3}</div>";
-            return string.Format(html, string.Format(body, color, background, fontSize, text));
+            return string.Format(html, string.Format(body, model.Color, model.Background, model.FontSize, model.Text));
         }
 
     }
